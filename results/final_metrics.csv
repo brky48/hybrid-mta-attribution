@@ -1,0 +1,9 @@
+Model,MAE,RMSE,Spearman_Corr,Ranking_Accuracy
+Hybrid_M_S,0.0571,0.0682,0.6,%60
+Last_Click,0.0725,0.0805,0.3,%40
+Time_Decay,0.0773,0.0851,0.1,%20
+Linear,0.0797,0.0876,0.1,%20
+Position_Based,0.0797,0.0878,0.1,%20
+Shapley,0.081,0.0909,0.1,%20
+First_Click,0.0872,0.0962,0.1,%20
+Markov,0.1466,0.1772,0.894,%60
