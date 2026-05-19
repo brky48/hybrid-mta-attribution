@@ -41,51 +41,8 @@ st.set_page_config(
 # ============================================================================
 
 # Path to figures directory (for the gallery)
-REPO_ROOT = os.path.dirname(os.path.dirname(APP_DIR))
+REPO_ROOT = os.path.dirname(APP_DIR)
 FIGURES_DIR = os.path.join(REPO_ROOT, 'figures')
-
-# ============================================================================
-# DEBUG INFO (TEMPORARY)
-# ============================================================================
-
-with st.expander("🔧 DEBUG: Path Information"):
-    st.markdown("**Path values computed by the page:**")
-
-    st.code(f"""
-__file__       : {__file__}
-APP_DIR        : {APP_DIR}
-REPO_ROOT      : {REPO_ROOT}
-FIGURES_DIR    : {FIGURES_DIR}
-
-FIGURES_DIR exists?  : {os.path.exists(FIGURES_DIR)}
-""")
-
-    if os.path.exists(FIGURES_DIR):
-        files_in_figures = sorted(os.listdir(FIGURES_DIR))
-        st.markdown(f"**Files in FIGURES_DIR ({len(files_in_figures)} total):**")
-        st.code('\n'.join(files_in_figures))
-    else:
-        st.error(f"FIGURES_DIR does not exist: {FIGURES_DIR}")
-
-    # Also check alternative locations
-    st.markdown("**Checking alternative locations:**")
-    alt_paths = [
-        os.path.join(APP_DIR, 'figures'),
-        os.path.join(os.path.dirname(APP_DIR), 'figures'),
-        os.path.join(REPO_ROOT, 'figures'),
-        '/mount/src/hybrid-mta-attribution/figures',
-        '/mount/src/hybrid-mta-attribution/app/figures',
-    ]
-    for p in alt_paths:
-        exists = os.path.exists(p)
-        marker = "✅" if exists else "❌"
-        st.text(f"{marker} {p}")
-        if exists:
-            try:
-                contents = sorted(os.listdir(p))[:5]  # First 5 files
-                st.caption(f"   Contains: {contents}")
-            except Exception:
-                pass
 
 # ============================================================================
 # CUSTOM CSS
