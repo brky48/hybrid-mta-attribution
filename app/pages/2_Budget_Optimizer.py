@@ -113,8 +113,9 @@ optimal_alpha = load_optimal_alpha()
 # SESSION STATE INITIALIZATION
 # ============================================================================
 
-if 'budget_amount' not in st.session_state:
-    st.session_state.budget_amount = 100_000
+# Use widget keys as the canonical state names (no separate variables)
+if 'budget_input' not in st.session_state:
+    st.session_state.budget_input = 100_000
 
 if 'min_pct_slider' not in st.session_state:
     st.session_state.min_pct_slider = 5
@@ -131,16 +132,16 @@ if 'budget_alpha_slider' not in st.session_state:
 # ============================================================================
 
 def set_preset_10k():
-    st.session_state.budget_amount = 10_000
+    st.session_state.budget_input = 10_000
 
 def set_preset_50k():
-    st.session_state.budget_amount = 50_000
+    st.session_state.budget_input = 50_000
 
 def set_preset_100k():
-    st.session_state.budget_amount = 100_000
+    st.session_state.budget_input = 100_000
 
 def set_preset_500k():
-    st.session_state.budget_amount = 500_000
+    st.session_state.budget_input = 500_000
 
 def reset_constraints():
     st.session_state.min_pct_slider = 5
@@ -157,21 +158,19 @@ def use_optimal_alpha():
 with st.sidebar:
     st.markdown("### 💵 Budget Controls")
 
-    # Total budget input
+    # Total budget input — managed entirely by widget key
     st.markdown("**Total Budget (USD)**")
 
     budget = st.number_input(
         "Total budget",
         min_value=5_000,
         max_value=1_000_000,
-        value=st.session_state.budget_amount,
         step=5_000,
         format="%d",
         key='budget_input',
         label_visibility='collapsed',
         help="Total marketing budget to allocate across paid channels"
     )
-    st.session_state.budget_amount = budget
 
     # Preset buttons
     st.caption("**Quick presets:**")
@@ -302,11 +301,7 @@ if 'Last_Click' in final_comp.columns:
         index=final_comp['channel']
     )
 
-    # Compute Last-Click's optimal allocation
-    from utils.models import optimize_budget as _opt
-
     # Last-Click sees only one channel as worth investing
-    # Simulate this by using LC weights as scores
     lc_scores = {ch: lc_weights.get(ch, 0) for ch in PAID_CHANNELS}
     lc_sum = sum(lc_scores.values())
     if lc_sum > 0:
@@ -314,9 +309,6 @@ if 'Last_Click' in final_comp.columns:
 
     # Compute Last-Click response under true effects
     lc_response = 0.0
-    # For fair comparison, Last-Click would allocate based on its weights
-    # We approximate by distributing budget proportionally to LC weights
-    # with constraints
     for ch in PAID_CHANNELS:
         lc_alloc = budget * lc_scores.get(ch, 0)
         # Apply constraints
@@ -340,22 +332,10 @@ gt_sum = sum(gt_scores_paid.values())
 if gt_sum > 0:
     gt_scores_paid = {ch: v / gt_sum for ch, v in gt_scores_paid.items()}
 
-# Use the same optimizer with GT scores
-gt_alloc_df = optimize_budget(
-    alpha=1.0,   # placeholder, we'll override scores
-    total_budget=budget,
-    min_pct=min_pct_frac,
-    max_pct=max_pct_frac,
-)
-
-# For a true GT optimal, we'd need to redirect optimizer with GT weights
-# Quick approximation: compute response with GT weights as scores
 gt_response = 0.0
 gt_alloc_dict = {}
 for ch in PAID_CHANNELS:
     weight = gt_scores_paid.get(ch, 0)
-    # Use the GT-weighted optimal allocation
-    # As a simple proxy: allocate proportional to GT weights with constraints
     raw_alloc = budget * weight
     constrained_alloc = max(budget * min_pct_frac, min(budget * max_pct_frac, raw_alloc))
     gt_alloc_dict[ch] = constrained_alloc
