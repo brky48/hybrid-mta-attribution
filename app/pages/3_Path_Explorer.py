@@ -84,10 +84,6 @@ st.markdown("""
         color: #D1D5DB;
         border: 1px solid #374151;
     }
-    .channel-button-google {
-        background-color: #4285F4 !important;
-        color: white !important;
-    }
     .path-display {
         background-color: #1F2937;
         padding: 1rem 1.5rem;
@@ -141,30 +137,24 @@ def clear_path():
     st.session_state.path = []
 
 
-# Preset journey callbacks
 def preset_awareness():
-    """Awareness-stage journey: Social → Search → Convert."""
     st.session_state.path = ['Social_Media', 'Organic_Search', 'Google_Ads']
 
 
 def preset_decision():
-    """High-intent decision journey."""
     st.session_state.path = ['Google_Ads', 'Direct']
 
 
 def preset_loyal():
-    """Loyal customer journey with email retargeting."""
     st.session_state.path = ['Email', 'Organic_Search', 'Email', 'Direct']
 
 
 def preset_chaotic():
-    """Long exploratory journey."""
     st.session_state.path = ['Social_Media', 'Organic_Search', 'Google_Ads',
                               'Email', 'Direct']
 
 
 def preset_single_social():
-    """Single-touch social — penalty case."""
     st.session_state.path = ['Social_Media']
 
 
@@ -177,11 +167,9 @@ with st.sidebar:
 
     st.markdown("**Add a channel:**")
 
-    # Channel buttons (color-coded)
     for ch in CHANNELS:
         col_emoji, col_btn = st.columns([1, 4])
         with col_emoji:
-            # Color indicator
             st.markdown(
                 f'<div style="width: 30px; height: 30px; background-color: '
                 f'{CHANNEL_COLORS[ch]}; border-radius: 4px; margin-top: 0.3rem;"></div>',
@@ -198,7 +186,6 @@ with st.sidebar:
 
     st.divider()
 
-    # Path manipulation
     st.markdown("**Path actions:**")
     col_back, col_clear = st.columns(2)
     with col_back:
@@ -218,7 +205,6 @@ with st.sidebar:
 
     st.divider()
 
-    # Preset journeys
     st.markdown("### 📋 Try These Journeys")
 
     st.button("🎯 Awareness Journey",
@@ -284,14 +270,12 @@ if not path:
     - How each attribution model credits the channels in your path
     """)
 else:
-    # Path text display
     path_str = " → ".join([CHANNEL_DISPLAY[ch] for ch in path])
     st.markdown(
         f'<div class="path-display">📍 <strong>Current journey:</strong> {path_str}</div>',
         unsafe_allow_html=True
     )
 
-    # Path diagram
     fig_path = plot_path_diagram(path)
     st.plotly_chart(fig_path, use_container_width=True)
 
@@ -301,7 +285,6 @@ else:
 # ============================================================================
 
 if path:
-    # Compute ground truth conversion probability
     prob_result = calculate_conversion_probability(path)
 
     # ========================================================================
@@ -335,7 +318,6 @@ if path:
         )
 
     with col_p4:
-        # Compare to 1.18% (overall conversion rate)
         relative = prob_result['probability'] / 0.0118 * 100
         st.metric(
             label="vs. Avg Path",
@@ -346,18 +328,14 @@ if path:
         )
 
     # ========================================================================
-    # FORMULA BREAKDOWN
+    # FORMULA BREAKDOWN — FIXED
     # ========================================================================
 
     st.markdown("### 🧮 Probability Breakdown")
 
-    st.markdown("""
-    The ground truth conversion probability is computed as:
+    st.markdown("The ground truth conversion probability is computed as:")
 
-    $$P(\\text{conv}) = R_{\\text{base}} \\cdot E_{\\text{individual}}
-    \\cdot M_{\\text{interaction}} \\cdot B_{\\text{recency}}
-    \\cdot N_{\\text{length}}$$
-    """)
+    st.latex(r"P(\text{conv}) = R_{\text{base}} \cdot E_{\text{individual}} \cdot M_{\text{interaction}} \cdot B_{\text{recency}} \cdot N_{\text{length}}")
 
     col_b1, col_b2, col_b3, col_b4, col_b5 = st.columns(5)
 
@@ -365,7 +343,7 @@ if path:
         st.markdown(f"""
         <div class="formula-block">
         <strong>Base Rate</strong><br>
-        $R_{{base}}$ = {BASE_CONVERSION_RATE:.3f}<br>
+        R<sub>base</sub> = {BASE_CONVERSION_RATE:.3f}<br>
         <em style="color: #9CA3AF; font-size: 0.85rem;">Constant</em>
         </div>
         """, unsafe_allow_html=True)
@@ -374,7 +352,7 @@ if path:
         st.markdown(f"""
         <div class="formula-block">
         <strong>Individual Effects</strong><br>
-        $E$ = {prob_result['individual_effect']:.3f}<br>
+        E = {prob_result['individual_effect']:.3f}<br>
         <em style="color: #9CA3AF; font-size: 0.85rem;">Sum of unique channels</em>
         </div>
         """, unsafe_allow_html=True)
@@ -383,7 +361,7 @@ if path:
         st.markdown(f"""
         <div class="formula-block">
         <strong>Interaction</strong><br>
-        $M$ = {prob_result['interaction_multiplier']:.3f}<br>
+        M = {prob_result['interaction_multiplier']:.3f}<br>
         <em style="color: #9CA3AF; font-size: 0.85rem;">Pairwise synergies</em>
         </div>
         """, unsafe_allow_html=True)
@@ -392,7 +370,7 @@ if path:
         st.markdown(f"""
         <div class="formula-block">
         <strong>Recency Bonus</strong><br>
-        $B$ = {prob_result['recency_bonus']:.3f}<br>
+        B = {prob_result['recency_bonus']:.3f}<br>
         <em style="color: #9CA3AF; font-size: 0.85rem;">Last touch boost</em>
         </div>
         """, unsafe_allow_html=True)
@@ -401,7 +379,7 @@ if path:
         st.markdown(f"""
         <div class="formula-block">
         <strong>Length Normalizer</strong><br>
-        $N$ = {prob_result['length_normalizer']:.3f}<br>
+        N = {prob_result['length_normalizer']:.3f}<br>
         <em style="color: #9CA3AF; font-size: 0.85rem;">1/(1+0.1·len)</em>
         </div>
         """, unsafe_allow_html=True)
@@ -468,7 +446,6 @@ if path:
 
     insights = []
 
-    # Length insight
     if len(path) == 1:
         insights.append({
             'icon' : '⚠️',
@@ -486,7 +463,6 @@ if path:
                      f"reflecting that more touches don't always mean higher conversion."
         })
 
-    # Interaction insight
     if prob_result['interaction_multiplier'] > 1.0:
         insights.append({
             'icon' : '✨',
@@ -506,7 +482,6 @@ if path:
                      f"because they reflect low purchase intent."
         })
 
-    # Recency insight
     if prob_result['recency_bonus'] > 1.08:
         insights.append({
             'icon' : '🎯',
@@ -517,7 +492,6 @@ if path:
                      f"its limitations."
         })
 
-    # Probability vs. average
     if prob_result['probability'] > 0.025:
         insights.append({
             'icon' : '🚀',
@@ -548,7 +522,6 @@ if path:
 
     attr_df = compute_path_attributions(path)
 
-    # Filter to channels in the path (for clarity)
     channels_in_path = list(set(path))
     attr_filtered = attr_df[attr_df['channel'].isin(channels_in_path)].copy()
 
@@ -562,17 +535,14 @@ if path:
 
     st.markdown("### 📋 Detailed Attribution Breakdown")
 
-    # Build comparison table
     comparison_df = attr_filtered.copy()
     comparison_df['channel'] = comparison_df['channel'].map(CHANNEL_DISPLAY)
     comparison_df = comparison_df.rename(columns={'channel': 'Channel'})
 
-    # Convert to percentages
     for col in comparison_df.columns:
         if col != 'Channel':
             comparison_df[col] = (comparison_df[col] * 100).round(1)
 
-    # Rename columns
     comparison_df = comparison_df.rename(columns={
         'Last_Click'    : 'Last-Click',
         'First_Click'   : 'First-Click',
@@ -635,57 +605,57 @@ if path:
 
 
 # ============================================================================
-# EDUCATIONAL FOOTER
+# EDUCATIONAL FOOTER — FIXED
 # ============================================================================
 
 st.divider()
 
 with st.expander("📚 Understanding the Ground Truth Model"):
-    st.markdown(f"""
-    ### How the Ground Truth Works
+    st.markdown("### How the Ground Truth Works")
 
-    The synthetic data generator uses this formula to simulate true
-    conversion probability for each path:
+    st.markdown(
+        "The synthetic data generator uses this formula to simulate true "
+        "conversion probability for each path:"
+    )
 
-    $$P(\\text{{conv}}) = R_{{\\text{{base}}}} \\cdot E_{{\\text{{individual}}}}
-    \\cdot M_{{\\text{{interaction}}}} \\cdot B_{{\\text{{recency}}}}
-    \\cdot N_{{\\text{{length}}}}$$
+    st.latex(r"P(\text{conv}) = R_{\text{base}} \cdot E_{\text{individual}} \cdot M_{\text{interaction}} \cdot B_{\text{recency}} \cdot N_{\text{length}}")
 
-    **Base rate:** {BASE_CONVERSION_RATE:.3f} (industry-grounded e-commerce benchmark)
+    st.markdown(f"**Base rate:** {BASE_CONVERSION_RATE:.3f} (industry-grounded e-commerce benchmark)")
 
-    **Individual effects** (calibrated from real-world conversion rate data):
+    st.markdown("""
+**Individual effects** (calibrated from real-world conversion rate data):
 
-    | Channel | Effect | Interpretation |
-    |---------|-------:|----------------|
-    | Google Ads | 0.35 | Highest intent (paid search) |
-    | Email | 0.25 | High conversion when segmented |
-    | Direct | 0.20 | Decision-stage users |
-    | Organic Search | 0.15 | Exploration phase |
-    | Social Media | 0.10 | Awareness phase |
+| Channel | Effect | Interpretation |
+|---------|-------:|----------------|
+| Google Ads | 0.35 | Highest intent (paid search) |
+| Email | 0.25 | High conversion when segmented |
+| Direct | 0.20 | Decision-stage users |
+| Organic Search | 0.15 | Exploration phase |
+| Social Media | 0.10 | Awareness phase |
 
-    **Pairwise interactions** (synergies):
+**Pairwise interactions** (synergies):
 
-    | Pair | Multiplier |
-    |------|-----------:|
-    | Social Media → Google Ads | ×1.15 |
-    | Email → Direct | ×1.20 |
-    | Organic Search → Email | ×1.10 |
-    | Google Ads → Email | ×1.12 |
-    | Social Media → Organic Search | ×1.08 |
+| Pair | Multiplier |
+|------|-----------:|
+| Social Media → Google Ads | ×1.15 |
+| Email → Direct | ×1.20 |
+| Organic Search → Email | ×1.10 |
+| Google Ads → Email | ×1.12 |
+| Social Media → Organic Search | ×1.08 |
 
-    **Recency bonus:** 1 + 0.3 × effect of last channel
+**Recency bonus:** 1 + 0.3 × effect of last channel
 
-    **Length normalizer:** 1 / (1 + 0.1 × path length)
+**Length normalizer:** 1 / (1 + 0.1 × path length)
 
-    **Single Social Media penalty:** ×0.6 if path consists only of Social Media
+**Single Social Media penalty:** ×0.6 if path consists only of Social Media
 
-    ### Why This Matters for Attribution
+### Why This Matters for Attribution
 
-    Real attribution models don't know these parameters — they have to
-    **estimate** them from data. The validation framework in this thesis
-    measures how well each model recovers the underlying ground truth.
+Real attribution models don't know these parameters — they have to
+**estimate** them from data. The validation framework in this thesis
+measures how well each model recovers the underlying ground truth.
 
-    By building custom paths here, you can see directly how different
-    attribution methodologies would credit each touchpoint, and develop
-    intuition for why classical methods systematically misattribute.
-    """)
+By building custom paths here, you can see directly how different
+attribution methodologies would credit each touchpoint, and develop
+intuition for why classical methods systematically misattribute.
+""")
