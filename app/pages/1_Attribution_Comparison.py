@@ -97,6 +97,37 @@ st.markdown('<p class="page-subtitle">Adjust the hybrid mixing parameter α and 
 
 
 # ============================================================================
+# LOAD CONSTANTS
+# ============================================================================
+
+# Get optimal alpha from CSV
+optimal_alpha = load_optimal_alpha()
+
+
+# ============================================================================
+# SESSION STATE INITIALIZATION
+# ============================================================================
+
+# Initialize alpha slider state ONCE (only on first page load)
+if 'alpha_slider' not in st.session_state:
+    st.session_state.alpha_slider = optimal_alpha
+
+
+# ============================================================================
+# BUTTON CALLBACKS (set state BEFORE slider is rendered)
+# ============================================================================
+
+def set_alpha_optimal():
+    """Set alpha to the optimal value."""
+    st.session_state.alpha_slider = optimal_alpha
+
+
+def set_alpha_reset():
+    """Reset alpha to 0.5 (neutral middle)."""
+    st.session_state.alpha_slider = 0.5
+
+
+# ============================================================================
 # SIDEBAR — CONTROLS
 # ============================================================================
 
@@ -108,38 +139,32 @@ with st.sidebar:
     st.caption("- α = 0: Pure Shapley")
     st.caption("- α = 1: Pure Markov")
 
-    # Get optimal alpha from CSV
-    optimal_alpha = load_optimal_alpha()
-
-    # Initialize session state for alpha
-    if 'alpha' not in st.session_state:
-        st.session_state.alpha = optimal_alpha
-
+    # Slider — uses session_state.alpha_slider automatically via key
     alpha = st.slider(
         "α value",
         min_value=0.0,
         max_value=1.0,
-        value=st.session_state.alpha,
         step=0.01,
         key='alpha_slider',
         help="The hybrid attribution weight = α × Markov + (1-α) × Shapley"
     )
 
-    # Sync session state
-    st.session_state.alpha = alpha
-
-    # Quick action buttons
+    # Quick action buttons with callbacks
     col_a, col_b = st.columns(2)
     with col_a:
-        if st.button("🎯 Optimal", use_container_width=True,
-                     help=f"Set α to optimal value ({optimal_alpha:.2f})"):
-            st.session_state.alpha = optimal_alpha
-            st.rerun()
+        st.button(
+            "🎯 Optimal",
+            use_container_width=True,
+            on_click=set_alpha_optimal,
+            help=f"Set α to optimal value ({optimal_alpha:.2f})"
+        )
     with col_b:
-        if st.button("🔄 Reset", use_container_width=True,
-                     help="Reset to α = 0.5"):
-            st.session_state.alpha = 0.5
-            st.rerun()
+        st.button(
+            "🔄 Reset",
+            use_container_width=True,
+            on_click=set_alpha_reset,
+            help="Reset to α = 0.5"
+        )
 
     st.divider()
 
@@ -214,12 +239,11 @@ with col1:
 
 with col2:
     delta_label = f"{improvement:+.1f}% vs Last-Click"
-    delta_color = "inverse" if improvement > 0 else "off"
     st.metric(
         label="Improvement",
         value=f"{abs(improvement):.1f}%",
         delta=delta_label,
-        delta_color="inverse",
+        delta_color="inverse" if improvement > 0 else "off",
         help="How much better (lower MAE) than Last-Click baseline"
     )
 
