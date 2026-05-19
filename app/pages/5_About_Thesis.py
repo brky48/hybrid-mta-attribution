@@ -41,8 +41,7 @@ st.set_page_config(
 # ============================================================================
 
 # Path to figures directory (for the gallery)
-REPO_ROOT = os.path.dirname(os.path.dirname(APP_DIR))
-FIGURES_DIR = os.path.join(REPO_ROOT, 'figures')
+FIGURES_DIR = os.path.join(APP_DIR, 'figures')
 
 
 # ============================================================================
