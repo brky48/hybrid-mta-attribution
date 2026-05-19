@@ -590,7 +590,7 @@ with col_l2:
             style="color: #60A5FA;">Faculty of Economics</a>
         </p>
         <p>
-            💼 <a href="https://iktisat.istanbul.edu.tr/yonetim-bilisim-sistemleri/"
+            💼 <a href="https://mis-iktisat.istanbul.edu.tr/tr/_"
             style="color: #60A5FA;">Department of Management Information Systems</a>
         </p>
     </div>
