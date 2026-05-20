@@ -57,8 +57,23 @@ st.markdown("""
     .subtitle {
         font-size: 1.2rem;
         color: #9CA3AF;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         font-style: italic;
+    }
+
+    /* Hero banner */
+    .hero-banner {
+        background: linear-gradient(135deg, #1E3A8A 0%, #7F1D1D 100%);
+        padding: 1.5rem 2rem;
+        border-radius: 12px;
+        margin: 1rem 0 2rem 0;
+        border: 1px solid #374151;
+        text-align: center;
+    }
+    .hero-banner-text {
+        font-size: 1.15rem;
+        color: #F9FAFB;
+        margin: 0;
     }
 
     /* Metric cards */
@@ -101,6 +116,18 @@ st.markdown("""
         font-size: 0.95rem;
         color: #9CA3AF;
         line-height: 1.5;
+    }
+
+    /* Page link buttons styling */
+    [data-testid="stPageLink"] {
+        background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+        border: 1px solid #374151;
+        border-radius: 8px;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    [data-testid="stPageLink"]:hover {
+        border-color: #60A5FA;
     }
 
     /* Citation block */
@@ -161,6 +188,17 @@ st.markdown('<h1 class="main-title">🎯 Hybrid Attribution Explorer</h1>',
 st.markdown('<p class="subtitle">An Interactive Companion to Multi-Touch Attribution Research</p>',
             unsafe_allow_html=True)
 
+# Hero banner
+st.markdown("""
+<div class="hero-banner">
+    <p class="hero-banner-text">
+        🚀 <strong>Explore the framework interactively</strong> —
+        adjust parameters, build customer journeys, and watch the models
+        respond in real time. Use the sidebar to navigate between modules.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("""
 Welcome to the interactive demonstration of the **Hybrid Markov-Shapley
 attribution framework** developed in the undergraduate thesis
@@ -212,12 +250,12 @@ with col4:
 
 
 # ============================================================================
-# PAGE NAVIGATION CARDS
+# PAGE NAVIGATION — CLICKABLE CARDS
 # ============================================================================
 
 st.markdown("## 🗺️ Explore the Framework")
 
-st.markdown("Navigate to any module using the sidebar, or click on the cards below to learn more:")
+st.markdown("Click any module below to dive in, or use the sidebar to navigate:")
 
 # First row
 col1, col2 = st.columns(2)
@@ -233,6 +271,11 @@ with col1:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    st.page_link(
+        "pages/1_Attribution_Comparison.py",
+        label="Open Attribution Comparison →",
+        icon="📊",
+    )
 
 with col2:
     st.markdown("""
@@ -245,6 +288,11 @@ with col2:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    st.page_link(
+        "pages/2_Budget_Optimizer.py",
+        label="Open Budget Optimizer →",
+        icon="💰",
+    )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -262,6 +310,11 @@ with col3:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    st.page_link(
+        "pages/3_Path_Explorer.py",
+        label="Open Path Explorer →",
+        icon="🛤️",
+    )
 
 with col4:
     st.markdown("""
@@ -274,6 +327,49 @@ with col4:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    st.page_link(
+        "pages/4_Methodology_Explainer.py",
+        label="Open Methodology Explainer →",
+        icon="📚",
+    )
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Third row — single card centered
+col5, col6 = st.columns(2)
+
+with col5:
+    st.markdown("""
+    <div class="page-card">
+        <div class="page-card-title">📈 About the Thesis</div>
+        <div class="page-card-desc">
+            Read the abstract, explore key findings, view the results
+            gallery, and find citation information for the underlying
+            research.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.page_link(
+        "pages/5_About_Thesis.py",
+        label="Open About the Thesis →",
+        icon="📈",
+    )
+
+with col6:
+    st.markdown("""
+    <div class="page-card" style="border-left: 4px solid #10B981;">
+        <div class="page-card-title">💻 View Source Code</div>
+        <div class="page-card-desc">
+            All code, data, and visualizations are open source under the
+            MIT License. Explore the full implementation on GitHub.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.link_button(
+        "View on GitHub →",
+        "https://github.com/brky48/hybrid-mta-attribution",
+        use_container_width=True,
+    )
 
 
 # ============================================================================
