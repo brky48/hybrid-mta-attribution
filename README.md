@@ -1,8 +1,11 @@
 # Hybrid Markov Chain and Shapley Value Approach to Multi-Touch Attribution
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Streamlit-FF4B4B.svg)](https://hybrid-attribution-explorer.streamlit.app)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Thesis](https://img.shields.io/badge/Thesis-Istanbul%20University-red.svg)](#citation)
+
+> 🎯 **[Try the interactive demo →](https://hybrid-attribution-explorer.streamlit.app)** — explore attribution models, optimize budgets, and build customer journeys in your browser.
 
 > **Undergraduate Thesis Project**
 > *Istanbul University, Faculty of Economics, Management Information Systems*
@@ -15,6 +18,7 @@ This repository contains the complete Python implementation of an undergraduate 
 ## Table of Contents
 
 - [Abstract](#abstract)
+- [Interactive Demo](#interactive-demo)
 - [Key Findings](#key-findings)
 - [Methodology](#methodology)
 - [Repository Structure](#repository-structure)
@@ -36,6 +40,26 @@ Multi-touch attribution (MTA) is a foundational analytical problem in digital ma
 This thesis addresses the validation problem through a synthetic-data framework with known ground truth, and proposes a **hybrid Markov-Shapley attribution model** that combines two complementary data-driven approaches. The hybrid model's mixing parameter is determined empirically through grid search, and its outputs are integrated with a non-linear budget optimization layer employing diminishing-returns response curves and the Differential Evolution algorithm.
 
 Empirical evaluation against a synthetic dataset of 30,000 customer journeys demonstrates that the hybrid model achieves substantially superior performance across both attribution accuracy and budget allocation metrics, particularly in the budget range characteristic of small-to-medium B2C e-commerce operations.
+
+---
+
+## Interactive Demo
+
+An interactive companion application is publicly available, allowing you to explore the framework directly in your browser without installing anything:
+
+### 🚀 **[hybrid-attribution-explorer.streamlit.app](https://hybrid-attribution-explorer.streamlit.app)**
+
+The demo is organized into five modules:
+
+| Module | What you can do |
+|--------|-----------------|
+| 📊 **Attribution Comparison** | Adjust the hybrid mixing parameter α with a slider and watch all 8 attribution models compare against the ground truth in real time. |
+| 💰 **Budget Optimizer** | Set a total budget and per-channel constraints; the Differential Evolution optimizer recomputes the optimal allocation live. |
+| 🛤️ **Path Explorer** | Build a customer journey touchpoint-by-touchpoint and see how each model assigns credit, plus the ground truth conversion probability. |
+| 📚 **Methodology Explainer** | Interactive deep-dive into Markov chains, Shapley values, the trade-off between them, and diminishing-returns curves. |
+| 📈 **About the Thesis** | Abstract, key findings, results gallery, and citation information. |
+
+The demo is built with Streamlit and Plotly, and reuses the same computational core found in the `src/` directory. Its source code lives in the `app/` directory of this repository.
 
 ---
 
@@ -122,6 +146,19 @@ hybrid-mta-attribution/
 |   |-- comparison_report.py           # Final aggregation and comparison
 |   |-- export_matrices.py             # Matrix export for Appendices B and C
 |
+|-- app/                               # Interactive Streamlit demo
+|   |-- streamlit_app.py               # Welcome / landing page
+|   |-- pages/                         # The five demo modules
+|   |   |-- 1_Attribution_Comparison.py
+|   |   |-- 2_Budget_Optimizer.py
+|   |   |-- 3_Path_Explorer.py
+|   |   |-- 4_Methodology_Explainer.py
+|   |   |-- 5_About_Thesis.py
+|   |-- utils/                         # Shared helpers (loaders, models, plotting)
+|       |-- data_loader.py
+|       |-- models.py
+|       |-- plotting.py
+|
 |-- data/                              # Generated dataset
 |   |-- customer_journey_data.csv      # 30K users, 105K touchpoints
 |
@@ -180,12 +217,14 @@ pip install -r requirements.txt
 
 ### Dependencies
 
-| Package | Version |
-|---------|---------|
-| numpy | >= 2.3.0 |
-| pandas | >= 2.3.0 |
-| scipy | >= 1.16.0 |
-| matplotlib | >= 3.10.0 |
+| Package | Version | Used by |
+|---------|---------|---------|
+| numpy | >= 2.3.0 | Core analysis |
+| pandas | >= 2.3.0 | Core analysis |
+| scipy | >= 1.16.0 | Core analysis |
+| matplotlib | >= 3.10.0 | Core analysis (static figures) |
+| streamlit | >= 1.40.0 | Interactive demo |
+| plotly | >= 5.20.0 | Interactive demo (charts) |
 
 ---
 
@@ -222,6 +261,17 @@ python export_matrices.py
 ```
 
 **Total execution time:** Approximately 15 minutes on consumer hardware.
+
+### Running the Interactive Demo Locally
+
+The Streamlit demo can also be run on your own machine:
+
+```bash
+# From the repository root, after installing requirements
+streamlit run app/streamlit_app.py
+```
+
+This launches the demo in your browser at `http://localhost:8501`. The demo reads the pre-computed CSV outputs in `results/`, so the analysis scripts above do not need to be re-run first.
 
 ### Reproducibility
 
