@@ -151,7 +151,7 @@ with st.sidebar:
 
     st.markdown("### 📥 Downloads")
     st.markdown("""
-    - 📄 [Thesis PDF](https://github.com/brky48/hybrid-mta-attribution)
+    - 📄 [Thesis PDF](https://github.com/brky48/hybrid-mta-attribution/blob/main/hybrid_mta_bk.pdf)
     - 💻 [Source Code](https://github.com/brky48/hybrid-mta-attribution)
     - 📊 [Datasets](https://github.com/brky48/hybrid-mta-attribution/tree/main/data)
     """)
