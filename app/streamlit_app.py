@@ -168,7 +168,7 @@ with st.sidebar:
     st.markdown("""
     - 💻 [GitHub Repository](https://github.com/brky48/hybrid-mta-attribution)
     - 🎓 [Istanbul University](https://www.istanbul.edu.tr/)
-    - 📄 [Thesis Documentation](https://github.com/brky48/hybrid-mta-attribution)
+    - 📄 [Thesis Documentation](https://github.com/brky48/hybrid-mta-attribution/blob/main/hybrid_mta_bk.pdf)
     """)
 
     st.divider()
