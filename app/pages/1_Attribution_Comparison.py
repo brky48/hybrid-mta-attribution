@@ -430,26 +430,3 @@ with st.expander("📚 How to interpret this page"):
     > Shapley approximates how much each matters but obscures which
     > matters most."*
     """)
-
-# ============================================================================
-# FOOTER
-# ============================================================================
-
-st.divider()
-
-st.markdown("""
-<div style="text-align: center; color: #9CA3AF; padding: 2rem 1rem;">
-    <p style="font-size: 1.1rem;">
-        🎓 <strong>Hybrid Attribution Explorer</strong><br>
-        Interactive companion to an undergraduate thesis at Istanbul University
-    </p>
-    <p style="font-size: 0.9rem;">
-        Developed in Python with Streamlit, Plotly, NumPy, and SciPy.<br>
-        Open source under MIT License.
-    </p>
-    <p style="font-size: 0.9rem; margin-top: 1rem;">
-        © 2026 Berkay Korkut · <a href="https://github.com/brky48/hybrid-mta-attribution"
-        style="color: #60A5FA;">Source on GitHub</a>
-    </p>
-</div>
-""", unsafe_allow_html=True)
